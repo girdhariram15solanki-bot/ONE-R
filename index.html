@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ICT Mobile Hub</title>
+    <style>
+        /* --- GLOBAL & THEME --- */
+        body {
+            background-color: #0d1117;
+            color: #e6edf3;
+            font-family: -apple-system, system-ui, sans-serif;
+            margin: 0;
+            padding: 15px;
+            line-height: 1.5;
+        }
+
+        header {
+            text-align: center;
+            padding: 20px 0;
+            border-bottom: 1px solid #30363d;
+            margin-bottom: 20px;
+        }
+
+        h1 { color: #58a6ff; margin: 0; font-size: 1.6rem; }
+
+        .status-pill {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            background-color: #30363d;
+            transition: background-color 0.5s;
+        }
+
+        /* --- CALCULATOR --- */
+        .calc-container {
+            background-color: #161b22;
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid #30363d;
+            margin-bottom: 25px;
+        }
+
+        .input-group { margin-bottom: 15px; }
+        .input-group label { display: block; font-size: 0.8rem; color: #8b949e; margin-bottom: 5px; }
+        .input-group input {
+            width: 100%; padding: 14px; background-color: #0d1117;
+            border: 1px solid #30363d; color: white; border-radius: 8px; font-size: 1.1rem; box-sizing: border-box;
+        }
+
+        .calc-btn {
+            width: 100%; background-color: #238636; color: white; padding: 16px;
+            border: none; border-radius: 8px; font-weight: bold; font-size: 1.1rem;
+        }
+
+        .result-display {
+            margin-top: 20px; text-align: center; font-weight: bold;
+            color: #3fb950; font-size: 1.3rem; border-top: 1px dashed #30363d; padding-top: 15px;
+        }
+
+        /* --- CHECKLIST --- */
+        .check-item {
+            background-color: #161b22; border: 1px solid #30363d;
+            padding: 15px; margin-bottom: 10px; border-radius: 8px;
+            display: flex; align-items: center; gap: 12px;
+        }
+        .check-item input { width: 20px; height: 20px; accent-color: #3fb950; }
+        .check-item.completed { opacity: 0.4; background-color: #0d1117; }
+        .check-item.completed span { text-decoration: line-through; }
+
+        /* --- JOURNAL --- */
+        .journal-inputs { display: flex; gap: 10px; margin-bottom: 15px; }
+        .journal-inputs input { flex: 2; padding: 12px; background: #161b22; border: 1px solid #30363d; color: white; border-radius: 8px; }
+        .journal-inputs select { flex: 1; background: #161b22; color: white; border: 1px solid #30363d; border-radius: 8px; }
+        
+        .trade-item {
+            background: #21262d; padding: 12px; border-radius: 8px;
+            margin-bottom: 8px; display: flex; justify-content: space-between;
+            border-left: 4px solid #58a6ff;
+        }
+
+        /* --- NOTES --- */
+        textarea {
+            width: 100%; height: 120px; background-color: #161b22; color: white;
+            border: 1px solid #30363d; border-radius: 8px; padding: 12px;
+            box-sizing: border-box; font-size: 1rem; resize: none;
+        }
+
+        #save-status { font-size: 0.7rem; color: #3fb950; text-align: right; opacity: 0; }
+
+        /* --- CONCEPT CARDS --- */
+        .concept-grid { display: grid; grid-template-columns: 1fr; gap: 15px; margin-top: 20px;}
+        .card { background-color: #161b22; border: 1px solid #30363d; padding: 15px; border-radius: 10px; }
+        .concept-img { width: 100%; border-radius: 6px; margin: 10px 0; border: 1px solid #30363d; }
+        
+        .clear-btn { background: none; color: #f85149; border: 1px solid #30363d; width: 100%; padding: 10px; border-radius: 8px; margin-top: 10px; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>ICT Mobile Hub</h1>
+        <div id="session-status" class="status-pill">Loading Time...</div>
+    </header>
+
+    <main>
+        <section class="calc-container">
+            <div class="input-group">
+                <label>Account Balance ($)</label>
+                <input type="number" id="balance" placeholder="10000">
+            </div>
+            <div class="input-group">
+                <label>Risk %</label>
+                <input type="number" id="risk" placeholder="1">
+            </div>
+            <div class="input-group">
+                <label>Stop Loss (Pips)</label>
+                <input type="number" id="sl" placeholder="10">
+            </div>
+            <button class="calc-btn" onclick="calculateLots()">Calculate Lots</button>
+            <div class="result-display">Result: <span id="lot-result">0.00</span> Lots</div>
+        </section>
+
+        <section>
+            <h3>Daily Checklist</h3>
+            <div id="checklist-items"></div>
+        </section>
+
+        <hr style="border: 0; border-top: 1px solid #30363d; margin: 25px 0;">
+
+        <section>
+            <h3>Market Notes</h3>
+            <textarea id="market-notes" placeholder="Observations..."></textarea>
+            <div id="save-status">Saved ✓</div>
+        </section>
+
+        <section style="margin-top: 25px;">
+            <h3>Trade Journal</h3>
+            <div class="journal-inputs">
+                <input type="text" id="pair" placeholder="Pair">
+                <select id="result">
+                    <option value="Win 🟢">Win</option>
+                    <option value="Loss 🔴">Loss</option>
+                </select>
+                <button class="calc-btn" style="padding: 10px; width: auto;" onclick="addTrade()">Log</button>
+            </div>
+            <div id="trade-list"></div>
+            <button class="clear-btn" onclick="clearJournal()">Clear All History</button>
+        </section>
+
+        <div class="concept-grid">
+            <div class="card">
+                <h3>Fair Value Gap</h3>
+                <img src="https://placehold.co/400x200/21262d/58a6ff?text=FVG+Example" class="concept-img">
+                <p>Imbalance left by a large candle.</p>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // --- CALCULATOR LOGIC ---
+        function calculateLots() {
+            const b = parseFloat(document.getElementById('balance').value);
+            const r = parseFloat(document.getElementById('risk').value);
+            const s = parseFloat(document.getElementById('sl').value);
+            if (b > 0 && r > 0 && s > 0) {
+                const res = (b * (r/100)) / (s * 10);
+                document.getElementById('lot-result').innerText = res.toFixed(2);
+            }
+        }
+
+        // --- CHECKLIST LOGIC ---
+        const rules = ["Forex Factory News", "DXY Analysis", "Daily Draw on Liquidity", "8:30 AM NY Open"];
+        function loadChecklist() {
+            const container = document.getElementById('checklist-items');
+            rules.forEach((rule, i) => {
+                const div = document.createElement('div');
+                div.className = 'check-item';
+                div.innerHTML = `<input type="checkbox" onchange="this.parentElement.classList.toggle('completed')"> <span>${rule}</span>`;
+                container.appendChild(div);
+            });
+        }
+
+        // --- JOURNAL & STORAGE ---
+        function addTrade() {
+            const pair = document.getElementById('pair').value.toUpperCase();
+            const res = document.getElementById('result').value;
+            if (pair) {
+                displayTrade(pair, res);
+                saveTrade(pair, res);
+                document.getElementById('pair').value = "";
+            }
+        }
+
+        function displayTrade(p, r) {
+            const item = document.createElement('div');
+            item.className = 'trade-item';
+            item.innerHTML = `<span>${p}</span> <span>${r}</span>`;
+            document.getElementById('trade-list').prepend(item);
+        }
+
+        function saveTrade(p, r) {
+            let trades = JSON.parse(localStorage.getItem('myTrades')) || [];
+            trades.push({p, r});
+            localStorage.setItem('myTrades', JSON.stringify(trades));
+        }
+
+        function clearJournal() {
+            if(confirm("Wipe all trades?")) {
+                localStorage.removeItem('myTrades');
+                document.getElementById('trade-list').innerHTML = "";
+            }
+        }
+
+        // --- NOTES AUTO-SAVE ---
+        const notes = document.getElementById('market-notes');
+        notes.value = localStorage.getItem('marketNotes') || "";
+        notes.addEventListener('input', () => {
+            localStorage.setItem('marketNotes', notes.value);
+            document.getElementById('save-status').style.opacity = "1";
+            setTimeout(() => document.getElementById('save-status').style.opacity = "0", 1000);
+        });
+
+        // --- SESSION TRACKER ---
+        function updateSession() {
+            const h = new Date().getHours();
+            const p = document.getElementById("session-status");
+            if (h >= 2 && h < 5) { p.innerText = "London 🟢"; p.style.backgroundColor = "#238636"; }
+            else if (h >= 7 && h < 11) { p.innerText = "New York 🔴"; p.style.backgroundColor = "#da3633"; }
+            else if (h >= 18 || h < 0) { p.innerText = "Asian 🔵"; p.style.backgroundColor = "#1f6feb"; }
+            else { p.innerText = "No Killzone ⚪"; p.style.backgroundColor = "#30363d"; }
+        }
+
+        // Initialize
+        loadChecklist();
+        updateSession();
+        (JSON.parse(localStorage.getItem('myTrades')) || []).forEach(t => displayTrade(t.p, t.r));
+    </script>
+</body>
+</html>
