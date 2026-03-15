@@ -1,0 +1,78 @@
+/* 1. CUSTOM VARIABLE FONTS */
+:root {
+    --primary-black: #000000;
+    --pure-white: #FFFFFF;
+}
+
+/* 2. BASE STYLES */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: var(--pure-white);
+    color: var(--primary-black);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+}
+
+/* 3. PREMIUM SCROLLBAR */
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--pure-white);
+}
+
+::-webkit-scrollbar-thumb {
+    background: #e5e5e5;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #000000;
+}
+
+/* 4. TYPOGRAPHY ENHANCEMENTS */
+.hero-text {
+    letter-spacing: -0.06em !important;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+/* 5. INTERACTIVE ELEMENTS */
+.purchase-card {
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.purchase-card:hover {
+    transform: translateY(-8px);
+}
+
+/* 6. BUTTON POLISH */
+.btn-premium {
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.btn-premium:active {
+    transform: scale(0.96);
+}
+
+/* 7. SECTION DIVIDERS */
+.section-border {
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+/* 8. MOBILE OPTIMIZATION */
+@media (max-width: 768px) {
+    .hero-text {
+        font-size: 3.5rem !important;
+        line-height: 1.1;
+    }
+}
